@@ -24,26 +24,12 @@ function syncCalendar() {
 
   const previousState = JSON.parse(props.getProperty("events") || "{}");
 
-  // ➕ Création & ✏️ Modification
+  // ➕ Création
   for (const id in currentState) {
     if (!previousState[id]) {
       sendEmbed("create", currentState[id]);
-    } else if (
-      previousState[id].title !== currentState[id].title ||
-      previousState[id].start !== currentState[id].start ||
-      previousState[id].end !== currentState[id].end
-    ) {
-      sendEmbed("update", currentState[id]);
     }
   }
-
-  // ❌ Suppression
-  for (const id in previousState) {
-    if (!currentState[id]) {
-      sendEmbed("delete", previousState[id]);
-    }
-  }
-
   props.setProperty("events", JSON.stringify(currentState));
 }
 
@@ -55,16 +41,6 @@ function sendEmbed(type, event) {
       color = 0x2ecc71;
       emoji = "📅";
       title = "Événement créé";
-      break;
-    case "update":
-      color = 0xf1c40f;
-      emoji = "✏️";
-      title = "Événement modifié";
-      break;
-    case "delete":
-      color = 0xe74c3c;
-      emoji = "❌";
-      title = "Événement supprimé";
       break;
   }
 
