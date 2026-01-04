@@ -10,15 +10,16 @@ function syncCalendar() {
 
   const events = calendar.getEvents(past, future);
   const currentState = {};
-
+  
   events.filter(event => !(event.getCreators().includes("test@gmail.com"))).forEach(event => {
     const id = event.getId();
-    console.log(event.getCreators());
+    const splitEventId = event.getId().split('@');
     currentState[id] = {
       title: event.getTitle(),
       start: event.getStartTime().toISOString(),
       end: event.getEndTime().toISOString(),
-      updated: event.getLastUpdated().toISOString()
+      updated: event.getLastUpdated().toISOString(),
+      url: "https://www.google.com/calendar/event?eid=" + Utilities.base64Encode(splitEventId[0] + " " + calendarId)
     };
     console.log(currentState[id]);
   });
@@ -41,7 +42,7 @@ function sendEmbed(type, event) {
     case "create":
       color = 0x2ecc71;
       emoji = "📅";
-      title = "Événement créé";
+      title = "Une nouvelle session a été ajoutée !";
       break;
   }
 
@@ -49,7 +50,8 @@ function sendEmbed(type, event) {
     title: `${emoji} ${title}`,
     color: color,
     fields: [
-      { name: "📝 Événement", value: event.title || "Sans titre", inline: false },
+      { name: "📝 Session", value: event.title || "Sans titre", inline: false },
+      { name: "➡️​ Lien:", value: event.url || "Pas de lien", inline: false },
       { name: "🕒 Début", value: formatDate(event.start), inline: true },
       { name: "🕔 Fin", value: formatDate(event.end), inline: true }
     ],
