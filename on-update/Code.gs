@@ -20,6 +20,7 @@ function syncCalendar() {
       end: event.getEndTime().toISOString(),
       updated: event.getLastUpdated().toISOString()
     };
+    console.log(currentState[id]);
   });
 
   const previousState = JSON.parse(props.getProperty("events") || "{}");
