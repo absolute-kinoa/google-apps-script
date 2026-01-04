@@ -51,9 +51,9 @@ function sendEmbed(type, event) {
     color: color,
     fields: [
       { name: "📝 Session", value: event.title || "Sans titre", inline: false },
-      { name: "➡️​ Lien:", value: event.url || "Pas de lien", inline: false },
       { name: "🕒 Début", value: formatDate(event.start), inline: true },
-      { name: "🕔 Fin", value: formatDate(event.end), inline: true }
+      { name: "🕔 Fin", value: formatDate(event.end), inline: true },
+      { name: "➡️​ Lien:", value: event.url || "Pas de lien", inline: false }
     ],
     footer: {
       text: "Google Calendar"
