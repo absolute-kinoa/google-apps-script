@@ -1,7 +1,7 @@
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/xxx";
 
 function syncCalendar() {
-  const calendar = CalendarApp.getDefaultCalendar();
+  const calendar = CalendarApp.getCalendarsByName("Your calendar")[0];
   const props = PropertiesService.getScriptProperties();
 
   const now = new Date();
@@ -11,7 +11,7 @@ function syncCalendar() {
   const events = calendar.getEvents(past, future);
   const currentState = {};
 
-  events.forEach(event => {
+  events.filter(event => !(event.getCreators().includes("test@gmail.com"))).forEach(event => {
     const id = event.getId();
     console.log(event.getCreators());
     currentState[id] = {
