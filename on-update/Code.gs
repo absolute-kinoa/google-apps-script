@@ -1,7 +1,11 @@
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/xxx";
 
+const userId = "<@XXXXXXXXXXXXXXXX>";
+const calendarName = "Your calendar";
+const userEmail = "your-email@example.com";
+
 function syncCalendar() {
-  const calendar = CalendarApp.getCalendarsByName("Your calendar")[0];
+  const calendar = CalendarApp.getCalendarsByName(calendarName)[0];
   const props = PropertiesService.getScriptProperties();
 
   const now = new Date();
@@ -11,7 +15,7 @@ function syncCalendar() {
   const events = calendar.getEvents(past, future);
   const currentState = {};
   
-  events.filter(event => !(event.getCreators().includes("test@gmail.com"))).forEach(event => {
+  events.filter(event => !(event.getCreators().includes(userEmail))).forEach(event => {
     const id = event.getId();
     const splitEventId = event.getId().split('@');
     currentState[id] = {
@@ -27,8 +31,13 @@ function syncCalendar() {
   const previousState = JSON.parse(props.getProperty("events") || "{}");
 
   // ➕ Création
+  var firstIt = true;
   for (const id in currentState) {
     if (!previousState[id]) {
+      if (firstIt) {
+        notify(userId);
+        firstIt = false;
+      }
       sendEmbed("create", currentState[id]);
     }
   }
@@ -69,6 +78,18 @@ function sendEmbed(type, event) {
     method: "post",
     contentType: "application/json",
     payload: JSON.stringify(payload)
+  });
+}
+
+function notify(userId){
+  const message = {
+    content: `${userId}`
+  };
+  
+  UrlFetchApp.fetch(DISCORD_WEBHOOK_URL, {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(message)
   });
 }
 
